@@ -15,7 +15,6 @@ import model.*
  */
 
 var isLocal= false
-var tes = false
 var g: Game? =null
 
 class ReversiViewModel(
@@ -50,7 +49,6 @@ class ReversiViewModel(
 
     // Plays the given position in the game
     fun play(pos: Cell) = tryRun {
-        pass = 0
         //println(pos)
         game = game?.play(pos, storage, isLocal)
         loopAutoRefresh()
@@ -58,8 +56,6 @@ class ReversiViewModel(
 
     fun pass() = tryRun {
         game = game?.pass(storage)
-        g= game
-        tes= true
         loopAutoRefresh()
         closeDialog()
     }

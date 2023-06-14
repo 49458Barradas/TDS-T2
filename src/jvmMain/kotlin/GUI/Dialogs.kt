@@ -20,7 +20,7 @@ fun ReversiDialog(vm: ReversiViewModel) =
     when (vm.open) {
         Dialog.NEW -> NameDialog(vm::closeDialog, vm::newGame, "New Game")
         Dialog.JOIN -> NameDialog(vm::closeDialog, vm::joinGame, "Join Game")
-        Dialog.HELP -> GenericDialog(vm::closeDialog,"teste",vm::pass)
+        Dialog.HELP -> GenericDialog(vm::closeDialog,"Turn Passed",vm::pass)
         Dialog.MESSAGE -> MessageDialog(vm::closeDialog, vm.message)
         null -> Unit
     }

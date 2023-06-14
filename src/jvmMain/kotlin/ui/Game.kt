@@ -4,6 +4,7 @@ import storage.Storage
 import GUI.*
 var pass = 0
 var targets = false
+var tes = false
 
 /**
  * Represents each side of the game.
@@ -24,7 +25,7 @@ fun createGame(local:Boolean, id: String, st: BoardStorage) =
     if(local){Game(createBoard(Player.WHITE), Player.WHITE, id).also {
         st.create(it.id, it.board)
     }}
-    else{Game(createBoard(Player.BLACK), Player.BLACK, id).also {
+    else{Game(createBoard(Player.WHITE), Player.WHITE, id).also {
         st.create(it.id, it.board)
     }}
 
@@ -34,12 +35,15 @@ fun createGame(local:Boolean, id: String, st: BoardStorage) =
 suspend fun joinGame(id: String, st: BoardStorage): Game {
     val board = checkNotNull( st.read(id) ) { "Game not found" }
     check( board is BoardRun && board.moves.size <= 5 ) { "Game is not available" }
+    board.turn= board.turn.turn()
     return Game(board, board.turn, id)//possivelment alterar para ifs
 }
 fun Game.pass(st:BoardStorage): Game{
     require(board is BoardRun){"Game Over"}
     if(!isLocal)check(player == board.turn ) { "Is not your turn" }
     val tempCheck: Pair<Boolean, Player?>
+    ++pass
+    print(pass)
     if(pass==2){
         tempCheck= board.isWin()
         if(tempCheck.first){
@@ -49,6 +53,8 @@ fun Game.pass(st:BoardStorage): Game{
             else return(Game(BoardWin(board.moves, tempCheck.second!!),board.turn.turn(),id))
         }
     }
+    tes= true
+    board.turn= board.turn.turn()
     return(Game(board,board.turn.turn(),id))
 }
 
@@ -60,7 +66,6 @@ fun Game.play(pos: Cell, st: BoardStorage,local:Boolean): Game {
         if(!isLocal)check(player == board.turn ) { "Is not your turn" }
     }
     tes= false
-    pass=0
     return copy( board= board.play(pos) ).also { st.update(id, it.board) }
 }
 

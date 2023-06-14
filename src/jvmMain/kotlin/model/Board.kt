@@ -91,6 +91,7 @@ fun Board.play(pos: Cell):Board = when(this){
         val mutableMap = mutableMapOf<Cell, Player>().apply { putAll(moves) }
         val legalMoves = getLegalMoves()
         if (pos in legalMoves) {
+            pass = 0
             Direction.values().forEach { direction ->
                 val cellsInDir = cellsInDirection(pos, direction)
                 var i = 0
@@ -117,8 +118,8 @@ fun Board.play(pos: Cell):Board = when(this){
         val tempCheck = isWin()
         val tempCheckDraw = isDraw()
         when {
-            tempCheckDraw -> BoardDraw(moves)
-            tempCheck.first -> BoardWin(moves, tempCheck.second!!)
+            tempCheckDraw -> BoardDraw(mutableMap)
+            tempCheck.first -> BoardWin(mutableMap, tempCheck.second!!)
             moves.size == BOARD_DIM * BOARD_DIM && moves.count { it.value == turn } == moves.count { it.value == turn.turn() } -> BoardDraw(
                 moves)
             illegal -> BoardRun(mutableMap, turn)
@@ -150,7 +151,7 @@ fun BoardRun.isDraw(): Boolean{
  * @return true if the game is over, false otherwise and the winner is put as the second element of the pair
  */
 fun BoardRun.isWin(): Pair<Boolean,Player?> {
-    val bool = moves.size == BOARD_DIM * BOARD_DIM || pass == 2
+    val bool = moves.size == BOARD_DIM * BOARD_DIM - 1 || pass == 2
     val winner: Player? = if(moves.count{it.value==turn}>moves.count{it.value==turn.turn()}) turn
     else {
         if(moves.count{it.value==turn}<moves.count{it.value==turn.turn()}) turn.turn()

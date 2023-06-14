@@ -23,20 +23,11 @@ fun FrameWindowScope.ReversiApp(onExit: ()->Unit, storage: BoardStorage) {
     ReversiDialog(vm)                              // The Dialogs.
     // Content of the application window.
     Column {
-        if(!tes)BoardView(vm.game?.board, onClick = vm::play)
-        else {
-            var t: Board? = null
-            when(val b= g?.board) {
-                is BoardRun -> {
-                    t= b
-                    t.turn= g?.player ?: t.turn
-                }
-                is BoardWin -> StatusInfo("Winner",b.winner)
-                is BoardDraw -> StatusInfo("Draw")
-                null -> StatusInfo("No Game")
-            }
-            BoardView(t,onClick = vm::play)
+        val t: Board? = vm.game?.board
+        if(t is BoardRun){
+            print(t.turn)
         }
+        BoardView(t,onClick = vm::play)
         StatusBar(vm.status)
     }
 }
